@@ -23,6 +23,8 @@ Operations are flags, so they can be combined:
 ./sprite.py -E 4 image.png            # enlarge 4x (nearest neighbour)
 ```
 
+`image.png` above is a placeholder; pass the path to your own image.
+
 | Flag | Meaning |
 | --- | --- |
 | `-C`, `-Cv` | center visually (default center mode) |
@@ -105,7 +107,32 @@ Enlarging happens last. If you combine it with `-O`, the outline is scaled too:
 
 `-c` saves only the content bounding box, removing blank padding.
 
-Generated outputs are git-ignored.
+## Formats
+
+Inputs are converted to RGBA internally, so any format Pillow can read works.
+Tested inputs include PNG, JPEG, BMP, GIF, WebP, and TIFF.
+
+An input needs a detectable blank background (the corners are checked);
+otherwise the tool reports `no blank padding detected`. JPEG compression noise
+can make `--tolerance` useful.
+
+Output defaults to PNG regardless of the input extension. Use `-o` to choose
+another extension:
+
+| Extension | Result |
+| --- | --- |
+| `.png` (default) | RGBA; recommended |
+| `.webp` | RGBA |
+| `.tiff` | RGBA |
+| `.gif` | palette mode; limited transparency |
+| `.bmp` | RGB; alpha is dropped |
+| `.jpg`, `.jpeg` | not supported; RGBA cannot be written as JPEG |
+
+If `-o` has no extension, `.png` is used. Animated GIF/WebP and multi-page
+TIFF inputs use only the first frame/page, and EXIF orientation is not applied.
+
+Generated `.png` outputs are git-ignored; outputs with other extensions are
+not.
 
 ## Adding an operation
 
