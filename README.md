@@ -111,3 +111,13 @@ Generated outputs are git-ignored.
 
 Implement the transform in `sprite/core.py`, expose it as a flag in
 `sprite/cli.py`, and add its descriptor to the output name there.
+
+## License
+
+SPRITE is released under the MIT License. You may use, modify, and distribute
+it, including commercially, provided the copyright and permission notice are
+retained. See [LICENSE](LICENSE) for the full text.
+
+Copyright (c) 2026 zh-xu0.
+
+SPDX-License-Identifier: MIT

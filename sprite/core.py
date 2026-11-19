@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# Copyright (C) 2026 zh-xu0
 """Core image analysis and rendering shared by the CLI."""
 
 from __future__ import annotations
