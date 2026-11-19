@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-# Copyright (C) 2026 zh-xu0
+# Copyright (C) 2026 Zachary Xu
 """Command-line front end for SPRITE."""
 
 from __future__ import annotations

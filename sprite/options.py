@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-# Copyright (C) 2026 zh-xu0
+# Copyright (C) 2026 Zachary Xu
 """Argument value parsers shared by the CLI front end."""
 
 from __future__ import annotations

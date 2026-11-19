@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MIT
-# Copyright (C) 2026 zh-xu0
+# Copyright (C) 2026 Zachary Xu
 """User-facing exceptions shared across the tool."""
 
 

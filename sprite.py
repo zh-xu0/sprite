@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: MIT
-# Copyright (C) 2026 zh-xu0
+# Copyright (C) 2026 Zachary Xu
 """SPRITE - Sprite Pixel Region Isolation, Transform & Editing.
 
 Small tools for pixel-art images.

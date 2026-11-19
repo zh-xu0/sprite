@@ -145,6 +145,6 @@ SPRITE is released under the MIT License. You may use, modify, and distribute
 it, including commercially, provided the copyright and permission notice are
 retained. See [LICENSE](LICENSE) for the full text.
 
-Copyright (c) 2026 zh-xu0.
+Copyright (c) 2026 Zachary Xu.
 
 SPDX-License-Identifier: MIT
