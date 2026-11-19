@@ -7,11 +7,11 @@ Small tools for pixel-art images.
 
 Examples:
 
-    ./sprite.py -C -O 3 test_image.png
-    ./sprite.py -Cm -O 2 test_image.png
-    ./sprite.py -c -O 1 test_image.png
-    ./sprite.py -O 3 test_image.png
-    ./sprite.py -E 4 test_image.png
+    ./sprite.py -C -O 3 image.png
+    ./sprite.py -Cm -O 2 image.png
+    ./sprite.py -c -O 1 image.png
+    ./sprite.py -O 3 image.png
+    ./sprite.py -E 4 image.png
 """
 
 from __future__ import annotations

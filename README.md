@@ -15,12 +15,12 @@ python -m pip install -r requirements.txt
 Operations are flags, so they can be combined:
 
 ```bash
-./sprite.py -C -O 3 test_image.png         # visually center + 3 px outline
-./sprite.py -Cm -O 2 test_image.png        # mathematically center + outline
-./sprite.py -c -O 1 test_image.png         # crop away padding, then outline
-./sprite.py -c test_image.png              # crop only
-./sprite.py -O 3 test_image.png            # outline only
-./sprite.py -E 4 test_image.png            # enlarge 4x (nearest neighbour)
+./sprite.py -C -O 3 image.png         # visually center + 3 px outline
+./sprite.py -Cm -O 2 image.png        # mathematically center + outline
+./sprite.py -c -O 1 image.png         # crop away padding, then outline
+./sprite.py -c image.png              # crop only
+./sprite.py -O 3 image.png            # outline only
+./sprite.py -E 4 image.png            # enlarge 4x (nearest neighbour)
 ```
 
 | Flag | Meaning |
@@ -44,25 +44,25 @@ The output name is the input stem followed by the operations that ran, in
 pipeline order:
 
 ```bash
-./sprite.py -C test_image.png          # -> test_image_centered_visual.png
-./sprite.py -Cm -O 2 test_image.png    # -> test_image_centered_mathematical_outline_2_000000.png
-./sprite.py -c -O 1 test_image.png     # -> test_image_cropped_outline_1_000000.png
-./sprite.py -O 3 test_image.png        # -> test_image_outline_3_000000.png
-./sprite.py -E 4 test_image.png        # -> test_image_enlarged_4.png
+./sprite.py -C image.png          # -> image_centered_visual.png
+./sprite.py -Cm -O 2 image.png    # -> image_centered_mathematical_outline_2_000000.png
+./sprite.py -c -O 1 image.png     # -> image_cropped_outline_1_000000.png
+./sprite.py -O 3 image.png        # -> image_outline_3_000000.png
+./sprite.py -E 4 image.png        # -> image_enlarged_4.png
 ```
 
 A combined example:
 
 ```bash
-./sprite.py -C -O 3 -E 4 test_image.png
-# -> test_image_centered_visual_outline_3_000000_enlarged_4.png
+./sprite.py -C -O 3 -E 4 image.png
+# -> image_centered_visual_outline_3_000000_enlarged_4.png
 ```
 
 The outline colour is included as a 6-digit hex code, or 8 digits when it has
 alpha. `-o` sets the base name; the same descriptor is appended:
 
 ```bash
-./sprite.py -C -O 3 test_image.png -o result.png
+./sprite.py -C -O 3 image.png -o result.png
 # -> result_centered_visual_outline_3_000000.png
 ```
 
@@ -85,12 +85,12 @@ the canvas by N pixels on every side. It is black by default.
 `#rrggbb`, or `#rrggbbaa`. Colour names are not supported.
 
 ```bash
-./sprite.py -O 3 --outline-color 'rgb(255, 0, 0)' test_image.png        # rgb
-./sprite.py -O 3 --outline-color 'rgba(255, 0, 0, 128)' test_image.png  # rgba
-./sprite.py -O 3 --outline-color '#f00' test_image.png                  # #rgb
-./sprite.py -O 3 --outline-color '#f008' test_image.png                 # #rgba
-./sprite.py -O 3 --outline-color '#ff0000' test_image.png               # #rrggbb
-./sprite.py -O 3 --outline-color '#ff000080' test_image.png             # #rrggbbaa
+./sprite.py -O 3 --outline-color 'rgb(255, 0, 0)' image.png        # rgb
+./sprite.py -O 3 --outline-color 'rgba(255, 0, 0, 128)' image.png  # rgba
+./sprite.py -O 3 --outline-color '#f00' image.png                  # #rgb
+./sprite.py -O 3 --outline-color '#f008' image.png                 # #rgba
+./sprite.py -O 3 --outline-color '#ff0000' image.png               # #rrggbb
+./sprite.py -O 3 --outline-color '#ff000080' image.png             # #rrggbbaa
 ```
 
 ### Enlarge
