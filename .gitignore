@@ -2,5 +2,6 @@ __pycache__/
 *.py[cod]
 .venv/
 venv/
-*_centered.png
-*_cropped.png
+*_centered_*.png
+*_cropped*.png
+*_outline_*.png

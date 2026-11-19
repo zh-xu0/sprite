@@ -5,9 +5,10 @@ Small tools for pixel-art images.
 
 Examples:
 
-    ./sprite.py center test_image.png
-    ./sprite.py center visual test_image.png -o centered.png
-    ./sprite.py crop test_image.png -o cropped.png
+    ./sprite.py -C -O 3 test_image.png
+    ./sprite.py -Cm -O 2 test_image.png
+    ./sprite.py -c -O 1 test_image.png
+    ./sprite.py -O 3 test_image.png
 """
 
 from __future__ import annotations

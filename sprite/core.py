@@ -1,4 +1,4 @@
-"""Core image analysis and rendering shared by all commands."""
+"""Core image analysis and rendering shared by the CLI."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
 
-from PIL import Image
+from PIL import Image, ImageChops, ImageFilter
 
 from .errors import ImageError
 
@@ -238,9 +238,60 @@ def render_crop(analysis: Analysis) -> Image.Image:
     return analysis.image.crop(analysis.bbox)
 
 
-def default_output(image_path: Path, suffix: str) -> Path:
-    image_path = Path(image_path)
-    return image_path.with_name(f"{image_path.stem}_{suffix}.png")
+def content_mask(
+    image: Image.Image, background: RGBA, tolerance: int = 0, alpha_min: int = 0
+) -> Image.Image:
+    """Return an 8-bit mask: 255 where the artwork is, 0 where it is blank."""
+    alpha_mask = image.getchannel("A").point(
+        [0 if value <= alpha_min else 255 for value in range(256)]
+    )
+    if background[3] == 0:
+        return alpha_mask
+
+    difference = ImageChops.difference(
+        image.convert("RGB"), Image.new("RGB", image.size, background[:3])
+    )
+    red, green, blue = difference.split()
+    largest = ImageChops.lighter(ImageChops.lighter(red, green), blue)
+    color_mask = largest.point(
+        [0 if value <= tolerance else 255 for value in range(256)]
+    )
+    return ImageChops.darker(alpha_mask, color_mask)
+
+
+def add_outline(
+    image: Image.Image,
+    background: RGBA,
+    width: int,
+    color: RGBA,
+    tolerance: int = 0,
+    alpha_min: int = 0,
+) -> Image.Image:
+    """Return the image with a width-pixel silhouette outline around it.
+
+    The canvas grows by width pixels on every side, and the outline follows
+    the artwork's shape using 8-connected (Chebyshev) distance.
+    """
+    if width < 1:
+        raise ValueError("outline width must be at least 1")
+
+    mask = content_mask(image, background, tolerance, alpha_min)
+    canvas_size = (image.width + 2 * width, image.height + 2 * width)
+
+    padded = Image.new("L", canvas_size, 0)
+    padded.paste(mask, (width, width))
+    # Dilate one pixel at a time: a single (2N+1)-wide kernel is much slower
+    # for large outlines than N passes of a 3x3 filter.
+    dilated = padded
+    for _ in range(width):
+        dilated = dilated.filter(ImageFilter.MaxFilter(3))
+    outline_mask = ImageChops.subtract(dilated, padded)
+
+    canvas = Image.new("RGBA", canvas_size, background)
+    canvas.paste(image, (width, width))
+    outline_layer = Image.new("RGBA", canvas_size, (0, 0, 0, 0))
+    outline_layer.paste(Image.new("RGBA", canvas_size, color), mask=outline_mask)
+    return Image.alpha_composite(canvas, outline_layer)
 
 
 def save(image: Image.Image, path: Path) -> None:
