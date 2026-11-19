@@ -20,6 +20,7 @@ Operations are flags, so they can be combined:
 ./sprite.py -c -O 1 test_image.png         # crop away padding, then outline
 ./sprite.py -c test_image.png              # crop only
 ./sprite.py -O 3 test_image.png            # outline only
+./sprite.py -E 4 test_image.png            # enlarge 4x (nearest neighbour)
 ```
 
 | Flag | Meaning |
@@ -28,13 +29,14 @@ Operations are flags, so they can be combined:
 | `-Cm` | center mathematically |
 | `-c` | crop away blank padding |
 | `-O N`, `--outline N` | add an N-pixel outline (N >= 1) |
+| `-E N`, `--enlarge N` | enlarge by a factor of N using nearest-neighbour sampling (N >= 1) |
 | `--outline-color COLOR` | outline colour (default `#000000`) |
 | `-o PATH` | output base path; the operation descriptor is appended (default: input stem) |
 | `--tolerance N` | per-channel colour tolerance for background matching |
 | `--alpha N` | treat pixels with alpha <= N as blank |
 
-Operations run in the order crop, center, outline. When `-c` is used the
-canvas is reduced to the artwork, so centering has no effect.
+Operations run in the order crop, center, outline, enlarge. When `-c` is used
+the canvas is reduced to the artwork, so centering has no effect.
 
 ### Output names
 
@@ -46,6 +48,14 @@ pipeline order:
 ./sprite.py -Cm -O 2 test_image.png    # -> test_image_centered_mathematical_outline_2_000000.png
 ./sprite.py -c -O 1 test_image.png     # -> test_image_cropped_outline_1_000000.png
 ./sprite.py -O 3 test_image.png        # -> test_image_outline_3_000000.png
+./sprite.py -E 4 test_image.png        # -> test_image_enlarged_4.png
+```
+
+A combined example:
+
+```bash
+./sprite.py -C -O 3 -E 4 test_image.png
+# -> test_image_centered_visual_outline_3_000000_enlarged_4.png
 ```
 
 The outline colour is included as a 6-digit hex code, or 8 digits when it has
@@ -82,6 +92,14 @@ the canvas by N pixels on every side. It is black by default.
 ./sprite.py -O 3 --outline-color '#ff0000' test_image.png               # #rrggbb
 ./sprite.py -O 3 --outline-color '#ff000080' test_image.png             # #rrggbbaa
 ```
+
+### Enlarge
+
+`-E N` scales the final image by a factor of N using nearest-neighbour
+sampling, so every source pixel becomes a clean N x N block.
+
+Enlarging happens last. If you combine it with `-O`, the outline is scaled too:
+`-O 3 -E 4` produces a 12-pixel-thick outline in the final image.
 
 ### Crop
 

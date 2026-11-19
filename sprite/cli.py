@@ -13,6 +13,7 @@ from .core import (
     describe_background,
     render_centered,
     render_crop,
+    render_enlarged,
     save,
 )
 from .errors import SpriteError
@@ -45,8 +46,8 @@ def _flag_parser() -> argparse.ArgumentParser:
             "small tools for pixel-art images."
         ),
         epilog=(
-            "Operations run in the order crop, center, outline. "
-            "Example: ./sprite.py -C -O 3 IMAGE"
+            "Operations run in the order crop, center, outline, enlarge. "
+            "Example: ./sprite.py -C -O 3 -E 4 IMAGE"
         ),
         allow_abbrev=False,
     )
@@ -84,6 +85,14 @@ def _flag_parser() -> argparse.ArgumentParser:
         type=positive_int,
         metavar="N",
         help="add an N-pixel outline around the artwork (N >= 1)",
+    )
+    parser.add_argument(
+        "-E",
+        "--enlarge",
+        dest="enlarge",
+        type=positive_int,
+        metavar="N",
+        help="enlarge by a factor of N using nearest-neighbour sampling (N >= 1)",
     )
     parser.add_argument(
         "-o",
@@ -127,13 +136,23 @@ def _run_flags(argv: list[str]) -> int:
     args = parser.parse_args(argv)
 
     if args.image is None:
-        if args.center_mode is None and not args.crop and args.outline is None:
+        if (
+            args.center_mode is None
+            and not args.crop
+            and args.outline is None
+            and args.enlarge is None
+        ):
             parser.print_help()
             return 0
         parser.error("IMAGE is required")
 
-    if args.center_mode is None and not args.crop and args.outline is None:
-        parser.error("no operation given (use -C, -Cm, -c, or -O N)")
+    if (
+        args.center_mode is None
+        and not args.crop
+        and args.outline is None
+        and args.enlarge is None
+    ):
+        parser.error("no operation given (use -C, -Cm, -c, -O N, or -E N)")
 
     analysis = analyze(args.image, tolerance=args.tolerance, alpha_min=args.alpha)
     image = analysis.image
@@ -168,6 +187,11 @@ def _run_flags(argv: list[str]) -> int:
         descriptors.append(
             f"outline_{args.outline}_{_color_code(args.outline_color)}"
         )
+
+    if args.enlarge is not None:
+        image = render_enlarged(image, args.enlarge)
+        applied.append(f"enlarge ({args.enlarge}x)")
+        descriptors.append(f"enlarged_{args.enlarge}")
 
     destination = _described_output(
         args.image, args.output, "_".join(descriptors)

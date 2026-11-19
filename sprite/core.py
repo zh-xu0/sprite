@@ -238,6 +238,16 @@ def render_crop(analysis: Analysis) -> Image.Image:
     return analysis.image.crop(analysis.bbox)
 
 
+def render_enlarged(image: Image.Image, factor: int) -> Image.Image:
+    """Return the image scaled by factor using nearest-neighbour sampling."""
+    if factor < 1:
+        raise ValueError("enlargement factor must be at least 1")
+    return image.resize(
+        (image.width * factor, image.height * factor),
+        Image.Resampling.NEAREST,
+    )
+
+
 def content_mask(
     image: Image.Image, background: RGBA, tolerance: int = 0, alpha_min: int = 0
 ) -> Image.Image:
